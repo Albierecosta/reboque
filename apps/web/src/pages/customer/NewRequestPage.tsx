@@ -129,7 +129,7 @@ export function NewRequestPage() {
               <div>
                 <p className="text-sm text-zinc-400">Localização atual</p>
                 <p className="mt-1 text-sm text-zinc-200">
-                  {coordinates ? `${coordinates.latitude.toFixed(5)}, ${coordinates.longitude.toFixed(5)}` : "Usando ponto padrão da demonstração"}
+                  {coordinates ? `${coordinates.latitude.toFixed(5)}, ${coordinates.longitude.toFixed(5)}` : "Usando ponto padrao temporario"}
                 </p>
                 <p className="mt-1 text-xs text-zinc-500">
                   {coordinates?.accuracy ? `Precisão aproximada: ${Math.round(coordinates.accuracy)} m` : "Aguardando precisão do GPS"}

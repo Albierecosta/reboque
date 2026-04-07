@@ -1,15 +1,14 @@
 import { useState, type FormEvent } from "react";
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Panel } from "@/components/Panel";
-import { demoCredentials } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const { login, loginDemo, isAuthenticated, user } = useAuth();
-  const [email, setEmail] = useState(demoCredentials.customer.email);
-  const [password, setPassword] = useState(demoCredentials.customer.password);
+  const { login, isAuthenticated, user } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -32,54 +31,20 @@ export function LoginPage() {
     }
   }
 
-  async function handleDemo(role: "customer" | "provider" | "admin") {
-    setIsSubmitting(true);
-    setError(null);
-
-    try {
-      const nextPath = await loginDemo(role);
-      navigate(nextPath);
-    } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Falha ao autenticar.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
-
   return (
     <div className="section-shell grid gap-16 py-16 lg:grid-cols-[0.9fr_1.1fr] lg:py-24">
       <div className="flex flex-col justify-center space-y-10">
         <div className="inline-flex items-center gap-2.5 rounded-full border border-brand-500/20 bg-brand-500/5 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-brand-400">
           <ShieldCheck className="size-4" />
-          Demonstração pronta
+          Acesso seguro
         </div>
         <div className="space-y-6">
           <h1 className="font-display text-5xl font-extrabold tracking-tight text-white sm:text-6xl">
             Bem-vindo<span className="text-brand-500">.</span>
           </h1>
           <p className="text-lg leading-relaxed text-zinc-400">
-            Acesse a plataforma e experimente o fluxo completo do MVP. Use uma conta demo para navegar como cliente, prestador ou administrador.
+            Acesse a plataforma com suas credenciais para entrar no painel administrativo ou no seu ambiente operacional.
           </p>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-          {(Object.entries(demoCredentials) as Array<[
-            "customer" | "provider" | "admin",
-            (typeof demoCredentials)[keyof typeof demoCredentials],
-          ]>).map(([role, credentials]) => (
-            <button
-              key={role}
-              type="button"
-              onClick={() => handleDemo(role as "customer" | "provider" | "admin")}
-              className="group flex items-center justify-between rounded-2xl border border-white/5 bg-white/5 p-4 transition-all hover:border-brand-500/30 hover:bg-brand-500/5"
-            >
-              <div>
-                <p className="text-sm font-bold text-white group-hover:text-brand-400">{credentials.label}</p>
-                <p className="text-xs text-zinc-500">{credentials.email}</p>
-              </div>
-              <ArrowRight className="size-4 text-zinc-600 transition-transform group-hover:translate-x-1 group-hover:text-brand-400" />
-            </button>
-          ))}
         </div>
       </div>
 

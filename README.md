@@ -36,7 +36,7 @@ MVP full-stack para marketplace de socorro veicular e busca de reboque próximo,
 - Atualização de status do atendimento
 - Dashboards separados por perfil
 - Painel admin com métricas, usuários, prestadores, chamados e categorias
-- Seed com dados de demonstração
+- Seed inicial com apenas o administrador master
 
 ## Execução local
 
@@ -170,11 +170,9 @@ Se quiser, voce tambem pode rodar apenas `npm run db:push` primeiro e depois apl
 4. Rodar `db:seed`
 5. Publicar o Web com `VITE_API_URL` apontando para a API
 
-## Contas demo
+## Usuario inicial
 
-- Cliente: `cliente@altum.com` / `123456`
-- Prestador: `prestador@altum.com` / `123456`
-- Admin: `admin@altum.com` / `123456`
+- Admin master: `contatoaltumsistemas@gmail.com` / `123456`
 
 ## Rotas principais do frontend
 

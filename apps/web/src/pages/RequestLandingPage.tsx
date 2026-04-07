@@ -29,7 +29,7 @@ export function RequestLandingPage() {
       <div className="rounded-[32px] border border-white/10 bg-[linear-gradient(135deg,rgba(251,191,36,0.15),rgba(255,255,255,0.03))] p-8">
         <h3 className="font-display text-4xl text-white">Precisa validar a experiência completa?</h3>
         <p className="mt-4 max-w-3xl text-base leading-8 text-zinc-200">
-          Faça login como cliente demo ou crie sua conta para registrar um atendimento real dentro do MVP.
+          Entre com sua conta ou crie um cadastro para registrar um atendimento real dentro da plataforma.
         </p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <Link to="/login" className="action-primary">
