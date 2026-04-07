@@ -1,0 +1,20 @@
+{
+  "name": "altum-sistemas-reboque",
+  "private": true,
+  "version": "0.1.0",
+  "description": "MVP marketplace de socorro veicular e busca de reboque proximo",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace web",
+    "dev:web": "npm run dev --workspace web",
+    "dev:api": "npm run dev --workspace api",
+    "build": "npm run build --workspace api && npm run build --workspace web",
+    "lint": "npm run lint --workspace web",
+    "db:generate": "npm run db:generate --workspace api",
+    "db:push": "npm run db:push --workspace api",
+    "db:seed": "npm run db:seed --workspace api"
+  }
+}

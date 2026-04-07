@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  customer
+  provider
+  admin
+}
+
+enum ServiceType {
+  reboque
+  pane_mecanica
+  bateria_descarregada
+  pneu_furado
+  pane_seca
+  chaveiro_automotivo
+  outro
+}
+
+enum ServiceRequestStatus {
+  pending
+  broadcasting
+  accepted
+  on_the_way
+  arrived
+  completed
+  cancelled
+}
+
+model User {
+  id               String           @id @default(cuid())
+  name             String
+  email            String           @unique
+  phone            String
+  passwordHash     String           @map("password_hash")
+  role             UserRole
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+  providerProfile  ProviderProfile?
+  customerRequests ServiceRequest[] @relation("CustomerRequests")
+  providerRequests ServiceRequest[] @relation("ProviderRequests")
+  customerRatings  Rating[]         @relation("CustomerRatings")
+  providerRatings  Rating[]         @relation("ProviderRatings")
+  notifications    Notification[]
+
+  @@map("users")
+}
+
+model ProviderProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique @map("user_id")
+  businessName    String   @map("business_name")
+  documentNumber  String   @map("document_number")
+  city            String
+  state           String
+  vehicleType     String   @map("vehicle_type")
+  vehiclePlate    String   @map("vehicle_plate")
+  serviceRadiusKm Float    @map("service_radius_km")
+  isOnline        Boolean  @default(false) @map("is_online")
+  isApproved      Boolean  @default(false) @map("is_approved")
+  currentLatitude Float?   @map("current_latitude")
+  currentLongitude Float?  @map("current_longitude")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("provider_profiles")
+}
+
+model ServiceRequest {
+  id                  String               @id @default(cuid())
+  customerId          String               @map("customer_id")
+  providerId          String?              @map("provider_id")
+  serviceType         ServiceType          @map("service_type")
+  problemDescription  String               @map("problem_description")
+  originAddress       String               @map("origin_address")
+  originLatitude      Float                @map("origin_latitude")
+  originLongitude     Float                @map("origin_longitude")
+  destinationAddress  String               @map("destination_address")
+  destinationLatitude Float?               @map("destination_latitude")
+  destinationLongitude Float?              @map("destination_longitude")
+  contactPhone        String               @map("contact_phone")
+  status              ServiceRequestStatus @default(pending)
+  estimatedPrice      Float?               @map("estimated_price")
+  acceptedAt          DateTime?            @map("accepted_at")
+  startedAt           DateTime?            @map("started_at")
+  completedAt         DateTime?            @map("completed_at")
+  cancelledAt         DateTime?            @map("cancelled_at")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  customer            User                 @relation("CustomerRequests", fields: [customerId], references: [id], onDelete: Cascade)
+  provider            User?                @relation("ProviderRequests", fields: [providerId], references: [id], onDelete: SetNull)
+  rating              Rating?
+
+  @@map("service_requests")
+}
+
+model Rating {
+  id               String         @id @default(cuid())
+  serviceRequestId String         @unique @map("service_request_id")
+  customerId       String         @map("customer_id")
+  providerId       String         @map("provider_id")
+  score            Int
+  comment          String?
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+  serviceRequest   ServiceRequest @relation(fields: [serviceRequestId], references: [id], onDelete: Cascade)
+  customer         User           @relation("CustomerRatings", fields: [customerId], references: [id], onDelete: Cascade)
+  provider         User           @relation("ProviderRatings", fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@map("ratings")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  title     String
+  message   String
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model ServiceCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("service_categories")
+}
